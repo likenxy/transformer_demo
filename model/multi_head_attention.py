@@ -38,8 +38,11 @@ class MultiHeadAttention(nn.Module):
 		v = s @ v
 		return v
 
-	def forward(self, x):
-		k, q, v = self.wk(x), self.wq(x), self.wv(x)
+	def forward(self, x, encoder_output=None):
+		if encoder_output is None:
+			k, q, v = self.wk(x), self.wq(x), self.wv(x)
+		else:
+			k, q, v = self.wk(x), self.wq(encoder_output), self.wv(encoder_output)
 		k, q, v = self.split(k), self.split(q), self.split(v)
 		v = self.attention(k, q, v)
 		v = self.concat(v)

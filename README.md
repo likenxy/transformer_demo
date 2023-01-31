@@ -1,4 +1,10 @@
-# transformer_demo
+1.完成编码器和解码器
+2.进行文本生成训练（对联）
+3.测试文本生成效果
 
-B站视频
-https://www.bilibili.com/video/BV1PY411Q7Q5/?vd_source=20ff0d9bea30d46de266d5e3e37a1c41#reply149508721632
+本期链接
+
+上期链接
+
+数据集
+https://github.com/v-zich/couplet-clean-dataset
