@@ -24,11 +24,13 @@ class MultiHeadAttention(nn.Module):
 	def split(self, tensor):
 		a, b, c = tensor.size()
 		d = c // self.n_head
-		return tensor.view(a, self.n_head, b, d)
+		ret = tensor.reshape(a, b, self.n_head, d).permute(0, 2, 1, 3)
+		return ret
 
 	def concat(self, tensor):
 		a, b, c, d = tensor.size()
-		return tensor.view(a, c, b * d)
+		tensor = tensor.permute(0, 2, 1, 3)
+		return tensor.reshape(a, c, b * d)
 
 	def attention(self, k, q, v):
 		_, _, _, d = k.size()
@@ -48,7 +50,6 @@ class MultiHeadAttention(nn.Module):
 		v = self.concat(v)
 
 		vb = v
-
 		v = self.norm(v + x)
 		v = self.f(v)
 		v = self.norm(v + vb)
