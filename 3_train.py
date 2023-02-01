@@ -66,7 +66,7 @@ def train():
 			desc = '[{}/{}][{}][{}]'.format(e+1, epoch, step, float(loss))
 			pbar.set_description(desc)
 			step += 1
-			if step % 100 == 0:
+			if step % 300 == 0:
 				print(p.size())
 				pids = torch.argmax(p, dim=2)
 				y = t[:,1:]
@@ -75,48 +75,10 @@ def train():
 					p_s = data.tokenizer.decode(pids.detach().cpu().numpy()[i])
 					ori_s = data.tokenizer.decode(y.detach().cpu().numpy()[i])
 					print("\n\n==[{}]==\n==[{}]==\n==[{}]==\n\n".format(ss, p_s, ori_s))
-			
+			if step % 2000 == 0:
+				torch.save(model.state_dict(), "./model_save/c_model_{}.pt".format(step))
+		torch.save(model.state_dict(), "./model_save/c_model_done.pt".format(step))
 
 if __name__ == "__main__":
 	train()
-# def pretrain():
-# 	config = ModelConfig(device=torch.device("cuda:0"))
-# 	config.load("./model_save/config.json")
-# 
-# 	model = PretrainModel(config)
-# 
-# 	data = PretrainDataSet()
-# 	loader = DataLoader(data, batch_size=20, shuffle=True)
-# 	epoch = 20
-# 	optimizer = optim.Adam(model.parameters(), lr=1e-4)
-# 	step = 0
-# 
-# 	pbar = tqdm(loader)
-# 	for e in range(epoch):
-# 		for ids, token_type_ids, mask_ids, ns in pbar:
-# 			ids = ids.to(config.device)
-# 			token_type_ids = token_type_ids.to(config.device)
-# 			mask_ids = mask_ids.to(config.device)
-# 			ns = ns.to(config.device)
-# 			optimizer.zero_grad()
-# 			loss = model(mask_ids, token_type_ids, ids, ns)
-# 			loss.backward()
-# 			optimizer.step()
-# 			step += 1
-# 			desc = '[{}/{}][{}][{}]'.format(e+1, epoch, step, float(loss))
-# 			pbar.set_description(desc)
-# 
-# 			if step % 100 == 0:
-# 				wmp, cls = model(mask_ids, token_type_ids)
-# 				pids = torch.argmax(wmp, dim=2)
-# 				for i in range(pids.size(0)):
-# 					s = data.tokenizer.decode(pids.detach().cpu().numpy()[i])
-# 					ori_s = data.tokenizer.decode(ids.detach().cpu().numpy()[i])
-# 					print("\n\n==[{}]==\n==[{}]==\n\n".format(s, ori_s))
-# 			if step % 5000 == 0:
-# 				torch.save(model.state_dict(), "./model_save/model_pretrain_{}.pt".format(step))
-# 		torch.save(model.state_dict(), "./model_save/pretrain_done.pt")
-# 
-# if __name__ == "__main__":
-# 	pretrain()
-# 
+ 

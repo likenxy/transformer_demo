@@ -1,2 +1,2 @@
-model/__pycache__/
-util/
+__pycache__
+model_save
